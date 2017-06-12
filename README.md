@@ -1,4 +1,4 @@
-TensorFlow project for recognize captcha by multi-label classification.
+TensorFlow project for recognizing captcha by multi-label classification.
 
 In this demo project, the captcha contains 6 characters, including `0~9, a~z, A~Z`. The image is of size `60x150x1`.
 
