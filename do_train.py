@@ -11,17 +11,13 @@ import do_validate
 def run(FLAGS, sess, net, saver, data_train, data_test):
     loss = net.loss
     acc0, acc1 = net.total_acc_in_char, net.total_acc_in_word
+    optim = net.optim
 
     loss_summary = tf.summary.scalar('loss', loss)
     acc0_summary = tf.summary.scalar('total_acc_in_char', acc0)
     acc1_summary = tf.summary.scalar('total_acc_in_word', acc1)
     all_summary = tf.summary.merge([loss_summary, acc0_summary, acc1_summary])
     summary_writer = tf.summary.FileWriter(FLAGS.log_path, sess.graph)
-
-    optim = tf.train.AdamOptimizer(FLAGS.learning_rate).minimize(loss)
-
-    init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
-    sess.run(init_op)
 
     ph_image, ph_label = net.placeholders()
     prev_epoch = data_train.epoch
@@ -49,8 +45,8 @@ def run(FLAGS, sess, net, saver, data_train, data_test):
         if data_train.iteration % FLAGS.disp == 0:
             print('Iter[%04d]: loss: %3.6f' % (data_train.iteration, loss_val))
         if prev_epoch != data_train.epoch:
-            print('Epoch[%03d] finished' % data_train.epoch, end=' ')
+            print('Epoch[%03d] finished' % data_train.epoch, end=': ')
             do_validate.run(sess, net, data_test)
-            saver.save(sess, os.path.join(FLAGS.log_path, 'model.ckpt'), data_train.iteration)
+            saver.save(sess, os.path.join(FLAGS.log_path, 'model.ckpt'), data_train.epoch)
         prev_epoch = data_train.epoch
 

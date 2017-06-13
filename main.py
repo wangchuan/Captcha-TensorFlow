@@ -1,12 +1,9 @@
 import tensorflow as tf
-import numpy as np
-import os
 
 from data_reader import DataReader
 from network import Net
 import do_train
 import do_validate
-import utils
 
 # parameters for app:
 FLAGS = tf.flags.FLAGS
@@ -28,6 +25,9 @@ def main():
         config = tf.ConfigProto(allow_soft_placement=True)
         config.gpu_options.allow_growth = True
         sess = tf.Session(config=config)
+
+        init_op = tf.group(tf.global_variables_initializer(), tf.local_variables_initializer())
+        sess.run(init_op)
 
         saver = tf.train.Saver()
 

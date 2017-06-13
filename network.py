@@ -20,6 +20,7 @@ class Net:
         self.logits = self.inference(self.ph_image)
         self.loss = self.compute_loss()
         self.total_acc_in_char, self.total_acc_in_word = self.compute_acc()
+        self.optim = tf.train.AdamOptimizer(FLAGS.learning_rate).minimize(self.loss)
 
     def placeholders(self):
         return self.ph_image, self.ph_label
